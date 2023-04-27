@@ -3,8 +3,13 @@ const fs=require('fs')
 const app = express();
 const jwt = require("jsonwebtoken");
 const dotenv=require('dotenv');
+const { default: mongoose } = require("mongoose");
+
+const userRouter=require("./route/user")
 dotenv.config();
 app.use(express.json())
+
+app.use("/",userRouter);
 // const posts = [
 
 //   {
@@ -18,38 +23,49 @@ app.use(express.json())
 //   },
 
 // ];
-// const post=fs.readFile()
+// // const post=fs.readFile()
 
-app.get("/post",authenticateToken,(req, res) => {
-    console.log(req.user)
-  res.json(posts.find(post=>post.username === req.user.name));
-});
+// // app.
 
-app.post("/login", (req, res) => {
-  const username = req.body.username;
-  console.log(username);
-  const user = { name: username };
+// // app.get("/post",authenticateToken,(req, res) => {
+// //     console.log(req.user)
+// //   res.json(posts.find(post=>post.username === req.user.name));
+// // });
 
-  const accesstoken = jwt.sign(user, "secretkey");
-  res.json({
-    accesstoken: accesstoken,
-  });
-});
+// app.post("/login", (req, res) => {
+//   const username = req.body.username;
+//   console.log(username);
+//   const user = { name: username };
 
-function authenticateToken(req,res,next){
-    const authHeader=req.headers['authorization'];
-    const token=authHeader && authHeader.split(' ')[1]
-    console.log(token)
-    if(token==null) return res.sendStatus(403);
+//   const accesstoken = jwt.sign(user, "secretkey");
+//   res.json({
+//     accesstoken: accesstoken,
+//   });
+// });
 
-    jwt.verify(token,"secretkey",(err,user)=>{
-        if(err) return res.sendStatus(404);
-        console.log(user);
-        req.user=user;
-        next()
-    })
-}
+// function authenticateToken(req,res,next){
+//     const authHeader=req.headers['authorization'];
+//     const token=authHeader && authHeader.split(' ')[1]
+//     console.log(token)
+//     if(token==null) return res.sendStatus(403);
 
-app.listen(5000, () => {
-  console.log("app is running on port 5000");
-});
+//     jwt.verify(token,"secretkey",(err,user)=>{
+//         if(err) return res.sendStatus(404);
+//         console.log(user);
+//         req.user=user;
+//         next()
+//     })
+// }
+// app.listen(5000, () => {
+//   console.log("app is running on port 5000");
+// }); 
+
+mongoose.connect("mongodb://localhost:27017/sh",{
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }).then(
+
+app.listen(6000, () => {
+  console.log("app is running on port 6000");
+})
+  ).catch(err=>console.log(err));
